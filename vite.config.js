@@ -5,7 +5,9 @@ import FullReload from 'vite-plugin-full-reload';
 import SortCss from 'postcss-sort-media-queries';
 
 export default defineConfig(({ command }) => {
+ 
   return {
+     base: `https://merdansahin.github.io/goit-js-hw-09/`, 
     define: {
       [command === 'serve' ? 'global' : '_global']: {},
     },

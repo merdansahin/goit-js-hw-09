@@ -5,46 +5,54 @@ import FullReload from 'vite-plugin-full-reload';
 import SortCss from 'postcss-sort-media-queries';
 
 export default defineConfig(({ command }) => {
- 
   return {
-     base: `https://merdansahin.github.io/goit-js-hw-09/`, 
+    
+    base: '/goit-js-hw-09/',
+    
+    
     define: {
       [command === 'serve' ? 'global' : '_global']: {},
     },
+
+  
     root: 'src',
+
     build: {
-      sourcemap: true,
+      sourcemap: false,
+      outDir: '../dist', 
+      emptyOutDir: true,
       rollupOptions: {
-        input: glob.sync('./src/*.html'),
+        input: glob.sync('./src/*.html'), 
         output: {
           manualChunks(id) {
             if (id.includes('node_modules')) {
               return 'vendor';
             }
           },
-          entryFileNames: chunkInfo => {
-            if (chunkInfo.name === 'commonHelpers') {
-              return 'commonHelpers.js';
-            }
-            return '[name].js';
-          },
-          assetFileNames: assetInfo => {
-            if (assetInfo.name && assetInfo.name.endsWith('.html')) {
-              return '[name].[ext]';
-            }
-            return 'assets/[name]-[hash][extname]';
-          },
+          assetFileNames: 'assets/[name]-[hash][extname]',
+          entryFileNames: '[name].js',
         },
       },
-      outDir: '../dist',
-      emptyOutDir: true,
     },
+
+    
     plugins: [
       injectHTML(),
-      FullReload(['./src/**/**.html']),
-      SortCss({
-        sort: 'mobile-first',
-      }),
+      FullReload(['./src/**/*.html']),
     ],
+
+    css: {
+      postcss: {
+        plugins: [
+          SortCss({ sort: 'mobile-first' }),
+        ],
+      },
+    },
+
+    //
+    server: {
+      open: true,
+      port: 5173,
+    },
   };
 });
